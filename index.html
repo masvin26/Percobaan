@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ucapan Ulang Tahun Istimewa</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+    }
+
+    .page {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .page.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* PIN PAGE */
+    .pin-page {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .pin-container {
+      background: white;
+      border-radius: 20px;
+      padding: 50px 40px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .pin-title {
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .pin-subtitle {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 40px;
+    }
+
+    .pin-input {
+      font-size: 28px;
+      letter-spacing: 12px;
+      text-align: center;
+      border: 2px solid #667eea;
+      border-radius: 12px;
+      padding: 15px;
+      width: 100%;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .pin-input:focus {
+      outline: none;
+      border-color: #764ba2;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .pin-button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 10px;
+    }
+
+    .pin-button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .error-msg {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-bottom: 15px;
+      min-height: 20px;
+    }
+
+    .qr-info {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .qr-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .qr-icon:hover {
+      transform: scale(1.1);
+    }
+
+    /* BIRTHDAY PAGE */
+    .birthday-page {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .birthday-container {
+      background: white;
+      border-radius: 20px;
+      padding: 60px 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .birthday-emoji {
+      font-size: 60px;
+      margin-bottom: 20px;
+      animation: bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .birthday-title {
+      font-size: 36px;
+      color: #f5576c;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .birthday-message {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    .birthday-message p {
+      margin: 15px 0;
+    }
+
+    .next-button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .next-button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
+    }
+
+    /* GALLERY PAGE */
+    .gallery-page {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      padding-top: 40px;
+      overflow-y: auto;
+    }
+
+    .gallery-header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .gallery-title {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .gallery-subtitle {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .gallery-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      margin-bottom: 40px;
+    }
+
+    .upload-section {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .upload-label {
+      display: block;
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .upload-area {
+      border: 2px dashed #fa709a;
+      border-radius: 12px;
+      padding: 40px 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: #fef5f8;
+    }
+
+    .upload-area:hover {
+      background: #feeaf2;
+      border-color: #fee140;
+    }
+
+    .upload-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .upload-text {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .gallery-item {
+      position: relative;
+      background: #f5f5f5;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid #eee;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.05);
+      border-color: #fa709a;
+    }
+
+    .gallery-item img,
+    .gallery-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-placeholder {
+      text-align: center;
+      color: #ccc;
+    }
+
+    .gallery-placeholder-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .gallery-placeholder-text {
+      font-size: 12px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .back-button {
+      width: 100%;
+      padding: 14px;
+      background: white;
+      color: #fa709a;
+      border: 2px solid #fa709a;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .back-button:hover {
+      background: #fef5f8;
+    }
+
+    /* MODAL QR */
+    .qr-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .qr-modal.active {
+      display: flex;
+    }
+
+    .qr-content {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .qr-title {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .qr-code-container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    #qrcode {
+      display: inline-block;
+    }
+
+    .qr-link {
+      font-size: 12px;
+      color: #666;
+      word-break: break-all;
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-family: monospace;
+    }
+
+    .qr-button {
+      width: 100%;
+      padding: 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .qr-close {
+      width: 100%;
+      padding: 12px;
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .pin-container, .birthday-container {
+        padding: 40px 25px;
+      }
+      
+      .gallery-title {
+        font-size: 28px;
+      }
+      
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page pin-page active" id="pinPage">
+  <div class="pin-container">
+    <div class="pin-title">🔒 Masukkan PIN</div>
+    <div class="pin-subtitle">Gunakan tanggal jadian kamu</div>
+    <div class="error-msg" id="errorMsg"></div>
+    <input type="password" id="pinInput" class="pin-input" placeholder="000000" maxlength="6" />
+    <button class="pin-button" onclick="verifyPin()">Buka Hadiah</button>
+    <div class="qr-info">💡 Scan QR Code yang dikirim atau klik icon 📱</div>
+  </div>
+  <button class="qr-icon" onclick="showQRCode()">📱</button>
+</div>
+
+<div class="page birthday-page" id="birthdayPage">
+  <div class="birthday-container">
+    <div class="birthday-emoji">🎉🎂💝</div>
+    <h1 class="birthday-title">Selamat Ulang Tahun!</h1>
+    <div class="birthday-message">
+      <p>Sayangilah diri kamu sendiri hari ini dan setiap hari.</p>
+      <p>Terima kasih sudah menjadi bagian dari hidup ku yang membuat setiap hari menjadi lebih bermakna dan penuh warna.</p>
+      <p style="margin-top: 25px; font-size: 18px; color: #f5576c; font-weight: bold;">Selamat ulang tahun, sayang! 💕</p>
+    </div>
+    <button class="next-button" onclick="goToGallery()">Lanjut →</button>
+  </div>
+</div>
+
+<div class="page gallery-page" id="galleryPage">
+  <div class="gallery-header">
+    <div class="gallery-title">💕 Kenangan Romantis 💕</div>
+    <div class="gallery-subtitle">Foto & Video Terbaik Kita</div>
+  </div>
+  
+  <div class="gallery-container">
+    <div class="upload-section">
+      <label class="upload-label">Tambah Foto / Video</label>
+      <div class="upload-area" onclick="triggerFileUpload()">
+        <div class="upload-icon">📸</div>
+        <div class="upload-text">Klik untuk unggah atau drag & drop</div>
+      </div>
+      <input type="file" id="fileInput" class="file-input" accept="image/*,video/*" multiple onchange="handleFileUpload(event)">
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gallery-placeholder-icon">❤️</div>
+          <div class="gallery-placeholder-text">Foto Pertama</div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gallery-placeholder-icon">💕</div>
+          <div class="gallery-placeholder-text">Foto Kedua</div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gallery-placeholder-icon">🎥</div>
+          <div class="gallery-placeholder-text">Video Pertama</div>
+        </div>
+      </div>
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gallery-placeholder-icon">🎬</div>
+          <div class="gallery-placeholder-text">Video Kedua</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="back-button" onclick="backToPin()">← Kembali</button>
+  </div>
+</div>
+
+<div class="qr-modal" id="qrModal">
+  <div class="qr-content">
+    <div class="qr-title">📱 Scan QR Code</div>
+    <div class="qr-code-container">
+      <div id="qrcode"></div>
+    </div>
+    <div class="qr-link" id="qrLink">Memuat...</div>
+    <button class="qr-button" onclick="downloadQR()">Download QR Code</button>
+    <button class="qr-close" onclick="closeQRCode()">Tutup</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+const PIN = "772025";
+let uploadedFiles = [];
+
+function verifyPin() {
+  const pin = document.getElementById('pinInput').value;
+  const errorMsg = document.getElementById('errorMsg');
+  
+  if (pin.length !== 6) {
+    errorMsg.textContent = '⚠️ PIN harus 6 digit';
+    return;
+  }
+  
+  if (pin === PIN) {
+    errorMsg.textContent = '';
+    goToBirthday();
+  } else {
+    errorMsg.textContent = '❌ PIN salah. Coba lagi!';
+    document.getElementById('pinInput').value = '';
+  }
+}
+
+function goToBirthday() {
+  showPage('birthdayPage');
+}
+
+function goToGallery() {
+  showPage('galleryPage');
+}
+
+function backToPin() {
+  showPage('pinPage');
+  document.getElementById('pinInput').value = '';
+  document.getElementById('errorMsg').textContent = '';
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+function triggerFileUpload() {
+  document.getElementById('fileInput').click();
+}
+
+function handleFileUpload(event) {
+  const files = event.target.files;
+  const gallery = document.getElementById('galleryGrid');
+  
+  for (let file of files) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      uploadedFiles.push({
+        type: file.type,
+        src: e.target.result
+      });
+      
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      
+      if (file.type.startsWith('image/')) {
+        item.innerHTML = `<img src="${e.target.result}" alt="Foto">`;
+      } else if (file.type.startsWith('video/')) {
+        item.innerHTML = `<video src="${e.target.result}" controls></video>`;
+      }
+      
+      gallery.appendChild(item);
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function showQRCode() {
+  const modal = document.getElementById('qrModal');
+  modal.classList.add('active');
+  
+  const qrcodeDiv = document.getElementById('qrcode');
+  qrcodeDiv.innerHTML = '';
+  
+  const currentUrl = window.location.href;
+  const qrLink = document.getElementById('qrLink');
+  qrLink.textContent = currentUrl || 'https://masvin26.github.io/Percobaan';
+  
+  new QRCode(qrcodeDiv, {
+    text: currentUrl || 'https://masvin26.github.io/Percobaan',
+    width: 250,
+    height: 250,
+    colorDark: "#667eea",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+}
+
+function closeQRCode() {
+  document.getElementById('qrModal').classList.remove('active');
+}
+
+function downloadQR() {
+  const qrCanvas = document.querySelector('#qrcode canvas');
+  const link = document.createElement('a');
+  link.href = qrCanvas.toDataURL('image/png');
+  link.download = 'qr-code-ulang-tahun.png';
+  link.click();
+}
+
+document.getElementById('pinInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') verifyPin();
+});
+
+document.getElementById('pinInput').focus();
+</script>
+
+</body>
+</html>
